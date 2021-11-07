@@ -21,8 +21,12 @@ import {async} from "q";
 
 export const fetchUsers = createAsyncThunk(
     'user/fetchAll',
-    async () => {
-        const response = await axios.get<IUser[]>('https://jsonplaceholder.typicode.com/users')
-        return response.data;
+    async (_, thunkAPI) => {
+        try {
+            const response = await axios.get<IUser[]>('https://jsonplaceholder.typicode.com/users')
+            return response.data;
+        } catch (e) {
+            return thunkAPI.rejectWithValue("Can not loading users")
+        }
     }
 )

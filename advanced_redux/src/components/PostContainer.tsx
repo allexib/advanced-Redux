@@ -8,6 +8,9 @@ const PostContainer = () => {
     const [limit, setLimit] = useState(100)
     const {data: posts, error, isLoading, refetch} = postAPI.useFetchAllPostsQuery(limit)
     const [createPost, {}] = postAPI.useCreatePostMutation()
+    const [updatePost, {}] = postAPI.useUpdatePostMutation()
+    const [deletePost, {}] = postAPI.useDeletePostMutation()
+
     useEffect(() => {
         // setTimeout(() => {
         //     setLimit(3)
@@ -19,6 +22,13 @@ const PostContainer = () => {
         await createPost({title, body: title} as IPost)
     }
 
+    const handleRemove = (post: IPost) => {
+        deletePost(post)
+    }
+    const handleUpdate = (post: IPost) => {
+        updatePost(post)
+    }
+
     return (
         <div>
             <div className="post__list">
@@ -27,7 +37,7 @@ const PostContainer = () => {
                 {isLoading && <h1>Loading.....</h1>}
                 {error && <h1>Error</h1>}
                 {posts && posts.map(post =>
-                    <PostItem post={post}/>
+                    <PostItem remove={handleRemove} update={handleUpdate} key={post.id} post={post}/>
                 )}
             </div>
         </div>
